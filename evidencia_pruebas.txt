@@ -1,0 +1,39 @@
+Ejecución local de pytest -q -s sobre main.py y test_api.py de la versión publicada. Token omitido.
+POST /auth/register {'username': 'student', 'password': 'Example123!'} => 201 {"id":1,"username":"student"}
+POST /auth/register {'username': 'student', 'password': 'Example123!'} => 409 {"detail":"Usuario existente"}
+POST /auth/login {'username': 'student', 'password': 'Wrong123!'} => 401 {"detail":"Credenciales incorrectas"}
+POST /auth/login {'username': 'student', 'password': 'Example123!'} => 200 [token omitido]
+GET /auth/validate None => 200 {"id":1,"username":"student"}
+GET /auth/validate None => 401 {"detail":"Token ausente, inválido o vencido"}
+GET /auth/validate None => 401 {"detail":"Token ausente, inválido o vencido"}
+GET /auth/validate None => 401 {"detail":"Token ausente, inválido o vencido"}
+POST /projects {'name': 'Software'} => 401 {"detail":"Token ausente, inválido o vencido"}
+POST /projects {} => 422 {"detail":[{"field":"body.name","message":"Field required"}]}
+POST /projects {'name': 'Software'} => 201 {"id":1,"name":"Software","owner_id":1}
+GET /projects None => 200 [{"id":1,"name":"Software","owner_id":1}]
+GET /projects None => 401 {"detail":"Token ausente, inválido o vencido"}
+GET /projects/1 None => 200 {"id":1,"name":"Software","owner_id":1}
+GET /projects/999 None => 404 {"detail":"Recurso inexistente"}
+PUT /projects/1 {'name': 'Software'} => 200 {"id":1,"name":"Software","owner_id":1}
+PUT /projects/1 {} => 422 {"detail":[{"field":"body.name","message":"Field required"}]}
+PUT /projects/999 {'name': 'Software'} => 404 {"detail":"Recurso inexistente"}
+POST /tasks {'title': 'Estudiar API', 'project_id': 1} => 401 {"detail":"Token ausente, inválido o vencido"}
+POST /tasks {} => 422 {"detail":[{"field":"body.title","message":"Field required"},{"field":"body.project_id","message":"Field required"}]}
+POST /tasks {'title': 'Estudiar API', 'project_id': 1} => 201 {"id":1,"title":"Estudiar API","done":false,"project_id":1}
+GET /tasks None => 200 [{"id":1,"title":"Estudiar API","done":false,"project_id":1}]
+GET /tasks None => 401 {"detail":"Token ausente, inválido o vencido"}
+GET /tasks/1 None => 200 {"id":1,"title":"Estudiar API","done":false,"project_id":1}
+GET /tasks/999 None => 404 {"detail":"Recurso inexistente"}
+PUT /tasks/1 {'title': 'Estudiar API', 'project_id': 1} => 200 {"id":1,"title":"Estudiar API","done":false,"project_id":1}
+PUT /tasks/1 {} => 422 {"detail":[{"field":"body.title","message":"Field required"},{"field":"body.project_id","message":"Field required"}]}
+PUT /tasks/999 {'title': 'Estudiar API', 'project_id': 1} => 404 {"detail":"Recurso inexistente"}
+POST /tasks {'title': 'Estudiar API', 'project_id': 999} => 404 {"detail":"Recurso inexistente"}
+DELETE /tasks/1 None => 204 
+DELETE /tasks/1 None => 404 {"detail":"Recurso inexistente"}
+POST /auth/register {'username': 'other', 'password': 'Example123!'} => 201 {"id":2,"username":"other"}
+POST /auth/login {'username': 'other', 'password': 'Example123!'} => 200 [token omitido]
+GET /projects/1 None => 403 {"detail":"Acceso no autorizado"}
+DELETE /projects/1 None => 204 
+DELETE /projects/1 None => 404 {"detail":"Recurso inexistente"}
+.
+1 passed in 1.12s
